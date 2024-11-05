@@ -2,8 +2,10 @@
   "name": "plgrzr-api",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts"
   },
+  "packageManager": "pnpm@9.4.0",
   "dependencies": {
     "@hono/node-server": "^1.13.5",
     "@prisma/client": "5.21.1",
