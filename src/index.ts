@@ -5,7 +5,12 @@ import { cors } from "hono/cors";
 import { MathpixService } from "./services/mathpixService.js";
 import { TextConverter } from "./services/textConverter.js";
 
-const app = new Hono();
+const app = new Hono<{
+  Variables: {
+    user: any;
+    session: any;
+  };
+}>();
 
 const APP_ID = process.env.APP_ID || "";
 const API_KEY = process.env.API_KEY || "";
@@ -24,11 +29,30 @@ app.use(
   })
 );
 
+app.use("*", async (c, next) => {
+  const session = await auth.api.getSession({ headers: c.req.raw.headers });
+
+  if (!session) {
+    c.set("user", null);
+    c.set("session", null);
+    return next();
+  }
+
+  c.set("user", session.user);
+  c.set("session", session.session);
+  return next();
+});
+
 app.get("/api/auth/*", (c) => auth.handler(c.req.raw));
 app.post("/api/auth/*", (c) => auth.handler(c.req.raw));
 
 app.post("/process-pdf", async (c) => {
+  const message = c.get("session");
+  console.log(message);
+  if (!message) return c.json({ error: "Unauthorized" }, 401);
+
   const formData = await c.req.formData();
+
   const file = formData.get("file") as File;
 
   if (!file || !file.name.endsWith(".pdf")) {

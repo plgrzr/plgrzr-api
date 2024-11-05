@@ -1,4 +1,3 @@
-// services/textConverter.ts
 interface Page {
   page: number;
   lines: Array<{ text: string }>;

@@ -1,4 +1,3 @@
-// services/mathpixService.ts
 import { HTTPException } from "hono/http-exception";
 
 interface MathpixOptions {
