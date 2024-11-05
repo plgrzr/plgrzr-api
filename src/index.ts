@@ -8,7 +8,7 @@ const app = new Hono();
 app.use(
   "*",
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "https://plgrzr.suryavirkapur.com"],
     allowHeaders: ["Content-Type", "Authorization"],
     allowMethods: ["POST", "GET", "OPTIONS"],
     exposeHeaders: ["Content-Length"],
