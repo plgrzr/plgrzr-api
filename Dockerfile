@@ -28,9 +28,6 @@ RUN pnpm prisma generate
 # Copy the rest of the application
 COPY . .
 
-# Build TypeScript
-RUN pnpm build
-
 # Expose port 3001
 EXPOSE 3001
 
