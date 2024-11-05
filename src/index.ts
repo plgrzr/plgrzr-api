@@ -2,8 +2,15 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { auth } from "./lib/auth.js";
 import { cors } from "hono/cors";
+import { MathpixService } from "./services/mathpixService.js";
+import { TextConverter } from "./services/textConverter.js";
 
 const app = new Hono();
+
+const APP_ID = process.env.APP_ID || "";
+const API_KEY = process.env.API_KEY || "";
+
+const mathpixService = new MathpixService(APP_ID, API_KEY);
 
 app.use(
   "*",
@@ -19,6 +26,32 @@ app.use(
 
 app.get("/api/auth/*", (c) => auth.handler(c.req.raw));
 app.post("/api/auth/*", (c) => auth.handler(c.req.raw));
+
+app.post("/process-pdf", async (c) => {
+  const formData = await c.req.formData();
+  const file = formData.get("file") as File;
+
+  if (!file || !file.name.endsWith(".pdf")) {
+    return c.json({ error: "Only PDF files are allowed" }, 400);
+  }
+
+  try {
+    const fileBuffer = await file.arrayBuffer();
+    const result = await mathpixService.processPdf(fileBuffer);
+    const processedResult = new TextConverter(result).convertPagewise();
+
+    return c.json(JSON.parse(processedResult));
+  } catch (error) {
+    if (error instanceof Error) {
+      return c.json({ error: error.message }, 500);
+    }
+    return c.json({ error: "An unknown error occurred" }, 500);
+  }
+});
+
+app.get("/health", (c) => {
+  return c.json({ status: "healthy" });
+});
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");
