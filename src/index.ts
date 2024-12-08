@@ -6,7 +6,7 @@ import { MathpixService } from "./services/mathpixService.js";
 import { TextConverter } from "./services/textConverter.js";
 import { z } from "zod";
 import { fromBuffer } from "pdf2pic";
-import { existsSync, mkdir } from "node:fs";
+import { existsSync, mkdir, writeFileSync } from "node:fs";
 import { compareDocumentPair } from "./lib/compareDocumentPair.js";
 import { generateUniquePairs } from "./lib/generateUniquePairs.js";
 
@@ -28,8 +28,15 @@ const APP_ID = process.env.APP_ID || "";
 const API_KEY = process.env.API_KEY || "";
 
 const mathpixService = new MathpixService(APP_ID, API_KEY);
-
-app.use("*", cors());
+const options = {
+	origin: "http://localhost:3000", // replace with your origin
+	allowHeaders: ["Content-Type", "Authorization"],
+	allowMethods: ["POST", "GET", "OPTIONS"],
+	exposeHeaders: ["Content-Length"],
+	maxAge: 600,
+	credentials: true,
+};
+app.use("*", cors(options));
 
 app.get("/api/auth/*", (c) => auth.handler(c.req.raw));
 app.post("/api/auth/*", (c) => auth.handler(c.req.raw));
@@ -140,10 +147,12 @@ app.post("/compare-multiple", async (c) => {
 			),
 		);
 
-		return c.json({
+		const res = {
 			total_comparisons: pairs.length,
 			comparisons,
-		});
+		};
+		writeFileSync("comparisons.json", JSON.stringify(res));
+		return c.json(res);
 	} catch (error) {
 		return c.json(
 			{

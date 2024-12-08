@@ -79,4 +79,9 @@ const compareResponseSchema = z.object({
 	report_url: z.string(),
 });
 
+const APIResultSchema = z.object({
+	total_comparisons: z.number(),
+	comparisons: z.array(compareResponseSchema),
+});
+
 export default compareResponseSchema;
