@@ -5,7 +5,7 @@ import { bearer } from "better-auth/plugins";
 
 const prisma = new PrismaClient();
 export const auth = betterAuth({
-	trustedOrigins: ["http://localhost:3000", "https://plgrzr.suryavirkapur.com"],
+	trustedOrigins: ["http://localhost:3000", "https://plgrzr.suryavirkapur.com", "https://plgrzr-web.pages.dev"],
 	database: prismaAdapter(prisma, {
 		provider: "postgresql",
 	}),

@@ -29,7 +29,7 @@ const API_KEY = process.env.API_KEY || "";
 
 const mathpixService = new MathpixService(APP_ID, API_KEY);
 const options = {
-	origin: "http://localhost:3000", // replace with your origin
+	origin: ["http://localhost:3000", "https://plgrzr.suryavirkapur.com", "https://plgrzr-web.pages.dev"], // replace with your origin
 	allowHeaders: ["Content-Type", "Authorization"],
 	allowMethods: ["POST", "GET", "OPTIONS"],
 	exposeHeaders: ["Content-Length"],
@@ -76,7 +76,7 @@ app.post("/pdf2img", async (c) => {
 		// Create images directory if it doesn't exist
 		const imagesDir = "./images";
 		if (!existsSync(imagesDir)) {
-			await mkdir(imagesDir, { recursive: true }, () => {});
+			await mkdir(imagesDir, { recursive: true }, () => { });
 		}
 
 		const fileBuffer = (await file.bytes()).buffer;
