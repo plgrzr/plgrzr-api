@@ -13,7 +13,7 @@ export async function compareDocumentPair(
 	formData.append("file2", file2);
 	formData.append("weight_text", weightText.toString());
 
-	const response = await fetch("http://localhost:5001/compare", {
+	const response = await fetch("https://ygsoc4sow8kcwkcogwsckook.13.76.121.152.sslip.io/compare", {
 		method: "POST",
 		body: formData,
 	});
@@ -22,7 +22,7 @@ export async function compareDocumentPair(
 		const error = await response.json();
 		throw new Error(error.error || "Comparison failed");
 	}
-    
+
 	const data = await response.json();
 	return compareResponseSchema.parse(data);
 }
