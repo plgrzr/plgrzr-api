@@ -1,9 +1,9 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "@prisma/client";
-import { bearer } from "better-auth/plugins";
 
 const prisma = new PrismaClient();
+
 export const auth = betterAuth({
 	trustedOrigins: ["http://localhost:3000", "https://plgrzr.suryavirkapur.com", "https://plgrzr-web.pages.dev"],
 	database: prismaAdapter(prisma, {
